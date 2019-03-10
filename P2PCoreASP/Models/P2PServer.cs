@@ -23,7 +23,7 @@ namespace P2PCoreASP.Models
 		{
 			if (e.Data == "Hi Server")
 			{
-				Console.WriteLine(e.Data);
+				Parameter.ServerMessage =  e.Data;
 				Send("Hi Client");
 			}
 			else

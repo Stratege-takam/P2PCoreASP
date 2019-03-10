@@ -18,8 +18,9 @@ namespace P2PCoreASP.Controllers
 			
 			Parameter.Server = new P2PServer();
 
-			Parameter.Server.Start();
-			
+			string message = Parameter.Server.Start();
+			ViewBag.Message = message;
+			ViewBag.Name = $"Current user is { Parameter.Name}";
 			return View();
 		}
 
@@ -42,7 +43,8 @@ namespace P2PCoreASP.Controllers
 			switch (indexViewModel.Menu)
 			{
 				case 1:
-					Parameter.Client.Connect($"{indexViewModel.ServerUrlConnect}/Blockchain");
+					result.Add( Parameter.Client.Connect($"{indexViewModel.ServerUrlConnect}/Blockchain"));
+					indexViewModel.ServerMessage = Parameter.ServerMessage;
 					break;
 				case 2:
 
@@ -55,7 +57,8 @@ namespace P2PCoreASP.Controllers
 
 			}
 			indexViewModel.Result = new List<string>();
-			indexViewModel.Result.Add(JsonConvert.SerializeObject(Parameter.PhillyCoin, Formatting.Indented));
+			result.Add(JsonConvert.SerializeObject(Parameter.PhillyCoin, Formatting.Indented));
+			indexViewModel.Result = result;
 			return View(indexViewModel);
 		}
 

@@ -12,6 +12,7 @@ namespace Blockchain_P2P_NetworkTest.ViewModels
 		public string Name { get; set; }
 		public string Address { get; set; }
 		public string RecieveName { get; set; }
+		public string ServerMessage { get; set; }
 		public int Amount { get; set; }
 		public List<string> Result { get; set; }
 
@@ -56,6 +57,11 @@ namespace Blockchain_P2P_NetworkTest.ViewModels
 			this.Address = Parameter.Address;
 			this.Port = Parameter.Port;
 			this.Result = new List<string>();
+			this.Name = Parameter.Name;
+			this.RecieveName = "Arno";
+			this.ServerUrlConnect = "ws://192.168.1.21:1";
+			this.Amount = 2500;
+			this.ServerMessage = Parameter.ServerMessage;
 		}
 	}
 

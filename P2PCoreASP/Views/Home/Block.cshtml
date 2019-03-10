@@ -10,6 +10,9 @@
 <h2>@ViewBag.Title </h2>
 
 
+<h4 class="text-success">
+	@Model.ServerMessage
+</h4>
 
 @using (Html.BeginForm(actionName: "Block", controllerName: "Home", method: FormMethod.Post))
 {

@@ -9,8 +9,9 @@ namespace P2PCoreASP.Models
 	{
 		IDictionary<string, WebSocket> wsDict = new Dictionary<string, WebSocket>();
 
-		public void Connect(string url)
+		public string Connect(string url)
 		{
+			var result = "";
 			if (!wsDict.ContainsKey(url))
 			{
 				WebSocket ws = new WebSocket(url);
@@ -18,7 +19,8 @@ namespace P2PCoreASP.Models
 				{
 					if (e.Data == "Hi Client")
 					{
-						Console.WriteLine(e.Data);
+
+						result = e.Data ;
 					}
 					else
 					{
@@ -38,7 +40,9 @@ namespace P2PCoreASP.Models
 				ws.Send("Hi Server");
 				ws.Send(JsonConvert.SerializeObject(Parameter.PhillyCoin));
 				wsDict.Add(url, ws);
+				
 			}
+			return result;
 		}
 
 		public void Send(string url, string data)

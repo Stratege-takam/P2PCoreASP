@@ -43,8 +43,8 @@ namespace P2PCoreASP.Controllers
 			switch (indexViewModel.Menu)
 			{
 				case 1:
-					result.Add( Parameter.Client.Connect($"{indexViewModel.ServerUrlConnect}/Blockchain"));
-					indexViewModel.ServerMessage = Parameter.ServerMessage;
+					 Parameter.Client.Connect($"{indexViewModel.ServerUrlConnect}/Blockchain");
+					 indexViewModel.ServerMessage = Parameter.ServerMessage;
 					break;
 				case 2:
 

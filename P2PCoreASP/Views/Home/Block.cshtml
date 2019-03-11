@@ -11,7 +11,21 @@
 
 
 <h4 class="text-success">
-	@Model.ServerMessage
+	@if (!string.IsNullOrEmpty(Model.ClientMessage) || !string.IsNullOrEmpty(Model.ServerMessage))
+	{
+	<span>
+		You are
+		@if (!string.IsNullOrEmpty(Model.ClientMessage))
+		{
+			<strong> Client </strong>
+		}
+		@if (!string.IsNullOrEmpty(Model.ServerMessage))
+		{
+			<strong> Server </strong>
+		}
+	</span>
+	}
+	@*@Model.ServerMessage*@
 </h4>
 
 @using (Html.BeginForm(actionName: "Block", controllerName: "Home", method: FormMethod.Post))

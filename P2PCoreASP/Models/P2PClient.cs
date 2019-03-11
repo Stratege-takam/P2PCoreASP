@@ -9,77 +9,119 @@ namespace P2PCoreASP.Models
 	{
 		IDictionary<string, WebSocket> wsDict = new Dictionary<string, WebSocket>();
 
-		public string Connect(string url)
+		public void Connect(string url)
 		{
-			var result = "";
-			if (!wsDict.ContainsKey(url))
+			try
 			{
-				WebSocket ws = new WebSocket(url);
-				ws.OnMessage += (sender, e) =>
+				var result = "";
+				if (!wsDict.ContainsKey(url))
 				{
-					if (e.Data == "Hi Client")
+					WebSocket ws = new WebSocket(url);
+					ws.OnMessage += (sender, e) =>
 					{
-
-						result = e.Data ;
-					}
-					else
-					{
-						Blockchain newChain = JsonConvert.DeserializeObject<Blockchain>(e.Data);
-						if (newChain.IsValid() && newChain.Chain.Count > Parameter.PhillyCoin.Chain.Count)
+						if (e.Data == "Hi Client")
 						{
-							List<Transaction> newTransactions = new List<Transaction>();
-							newTransactions.AddRange(newChain.PendingTransactions);
-							newTransactions.AddRange(Parameter.PhillyCoin.PendingTransactions);
 
-							newChain.PendingTransactions = newTransactions;
-							Parameter.PhillyCoin = newChain;
+							result = e.Data;
+							Parameter.ClientMessage = result;
 						}
-					}
-				};
-				ws.Connect();
-				ws.Send("Hi Server");
-				ws.Send(JsonConvert.SerializeObject(Parameter.PhillyCoin));
-				wsDict.Add(url, ws);
-				
+						else
+						{
+							Blockchain newChain = JsonConvert.DeserializeObject<Blockchain>(e.Data);
+							if (newChain.IsValid() && newChain.Chain.Count > Parameter.PhillyCoin.Chain.Count)
+							{
+								List<Transaction> newTransactions = new List<Transaction>();
+								newTransactions.AddRange(newChain.PendingTransactions);
+								newTransactions.AddRange(Parameter.PhillyCoin.PendingTransactions);
+
+								newChain.PendingTransactions = newTransactions;
+								Parameter.PhillyCoin = newChain;
+							}
+						}
+					};
+					ws.Connect();
+					ws.Send("Hi Server");
+					ws.Send(JsonConvert.SerializeObject(Parameter.PhillyCoin));
+					wsDict.Add(url, ws);
+				}
 			}
-			return result;
+			catch (Exception ex)
+			{
+
+				throw new Exception(ex.Message);
+			}
+		
+				
 		}
 
 		public void Send(string url, string data)
 		{
-			foreach (var item in wsDict)
+			try
 			{
-				if (item.Key == url)
+				foreach (var item in wsDict)
 				{
-					item.Value.Send(data);
+					if (item.Key == url)
+					{
+						item.Value.Send(data);
+					}
 				}
+			}
+			catch (Exception ex)
+			{
+
+				throw new Exception(ex.Message);
 			}
 		}
 
 		public void Broadcast(string data)
 		{
-			foreach (var item in wsDict)
+			try
 			{
-				item.Value.Send(data);
+				foreach (var item in wsDict)
+				{
+					item.Value.Send(data);
+				}
+			}
+			catch (Exception ex)
+			{
+
+				throw new Exception(ex.Message);
 			}
 		}
 
 		public IList<string> GetServers()
 		{
 			IList<string> servers = new List<string>();
-			foreach (var item in wsDict)
+			try
 			{
-				servers.Add(item.Key);
+				foreach (var item in wsDict)
+				{
+					servers.Add(item.Key);
+				}
+			}
+			catch (Exception ex)
+			{
+
+				throw new Exception(ex.Message);
 			}
 			return servers;
 		}
 
 		public void Close()
 		{
-			foreach (var item in wsDict)
+			try
 			{
-				item.Value.Close();
+				foreach (var item in wsDict)
+				{
+					item.Value.Close();
+				}
 			}
+			catch (Exception ex)
+			{
+
+				throw new  Exception(ex.Message);
+			}
+			
 		}
 	}
 }

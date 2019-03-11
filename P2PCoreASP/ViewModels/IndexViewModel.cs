@@ -1,4 +1,5 @@
-﻿using P2PCoreASP.Models;
+﻿using Newtonsoft.Json;
+using P2PCoreASP.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,9 @@ namespace Blockchain_P2P_NetworkTest.ViewModels
 		{
 			this.Address = Parameter.Address;
 			this.Port = Parameter.Port;
-			this.Result = new List<string>();
+			this.Result = new List<string>() {
+				JsonConvert.SerializeObject(Parameter.PhillyCoin)
+			};
 			this.Name = Parameter.Name;
 			this.RecieveName = "Arno";
 			//this.ServerUrlConnect = "ws://192.168.1.21:1";

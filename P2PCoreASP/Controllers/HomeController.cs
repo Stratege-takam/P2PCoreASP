@@ -14,13 +14,21 @@ namespace P2PCoreASP.Controllers
 		
 		public ActionResult Index()
 		{
-			Parameter.PhillyCoin.InitializeChain();
-			
-			Parameter.Server = new P2PServer();
+			try
+			{
+				Parameter.PhillyCoin.InitializeChain();
 
-			string message = Parameter.Server.Start();
-			ViewBag.Message = message;
-			ViewBag.Name = $"Current user is { Parameter.Name}";
+				Parameter.Server = new P2PServer();
+
+				string message = Parameter.Server.Start();
+				ViewBag.Message = message;
+				ViewBag.Name = $"Current user is { Parameter.Name}";
+			}
+			catch (Exception ex)
+			{
+				ViewBag.Error = ex.Message;
+			}
+			
 			return View();
 		}
 
@@ -37,29 +45,37 @@ namespace P2PCoreASP.Controllers
 		public ActionResult Block(IndexViewModel indexViewModel)
 		{
 
-
-			List<string> result = new List<string>();
-			Parameter.PhillyCoin.InitializeChain();
-			switch (indexViewModel.Menu)
+			try
 			{
-				case 1:
-					 Parameter.Client.Connect($"{indexViewModel.ServerUrlConnect}/Blockchain");
-					 indexViewModel.ServerMessage = Parameter.ServerMessage;
-					break;
-				case 2:
 
-					//creer une transaction
-					Parameter.PhillyCoin.CreateTransaction(new Transaction(indexViewModel.Name, indexViewModel.RecieveName, indexViewModel.Amount));
-					// créer un block, ajouter la transaction en attente 
-					Parameter.PhillyCoin.ProcessPendingTransactions(indexViewModel.Name);
-					Parameter.Client.Broadcast(JsonConvert.SerializeObject(Parameter.PhillyCoin));
-					break;
+				List<string> result = new List<string>();
+				Parameter.PhillyCoin.InitializeChain();
+				switch (indexViewModel.Menu)
+				{
+					case 1:
+						Parameter.Client.Connect($"{indexViewModel.ServerUrlConnect}/Blockchain");
+						indexViewModel.ServerMessage = Parameter.ServerMessage;
+						break;
+					case 2:
 
+						//creer une transaction
+						Parameter.PhillyCoin.CreateTransaction(new Transaction(indexViewModel.Name, indexViewModel.RecieveName, indexViewModel.Amount));
+						// créer un block, ajouter la transaction en attente 
+						Parameter.PhillyCoin.ProcessPendingTransactions(indexViewModel.Name);
+						Parameter.Client.Broadcast(JsonConvert.SerializeObject(Parameter.PhillyCoin));
+						break;
+
+				}
+				indexViewModel.Result = new List<string>();
+				result.Add(JsonConvert.SerializeObject(Parameter.PhillyCoin, Formatting.Indented));
+				indexViewModel.Result = result;
 			}
-			indexViewModel.Result = new List<string>();
-			result.Add(JsonConvert.SerializeObject(Parameter.PhillyCoin, Formatting.Indented));
-			indexViewModel.Result = result;
+			catch (Exception ex)
+			{
+				ViewBag.Error = ex.Message;
+			}
 			return View(indexViewModel);
+
 		}
 
 
